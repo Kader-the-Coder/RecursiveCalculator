@@ -1,9 +1,9 @@
 """A recursive algorithm to evaluate any algebraic expression."""
 
 #---------------------------IMPORT MODULES-----------------------------
-from format_expression import format_expression
-from prioritize import prioritize
-from simplify import simplify
+from modules.format_expression import format_expression
+from modules.prioritize import prioritize
+from modules.simplify import simplify
 #-----------------------------FUNCTIONS--------------------------------
 
 
