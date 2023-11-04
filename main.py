@@ -80,7 +80,7 @@ if __name__ == "__main__":
         "24 - ((32 * 5 / 4 + 1) - 7) - 5", "-15",
         "2-(-1-3)*(-5)", "-18",
         "2 - (-3 + 2 - 5 + (-2 * 3) + 7) / 2", "4.5",
-        "3(4)", "12"
+        "-3(4)", "-12"
         ]
     for index in range(0, len(expressions), 2):
         print(f"You got: {evaluate(expressions[index])}, ",
