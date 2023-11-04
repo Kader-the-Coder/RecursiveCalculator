@@ -85,3 +85,6 @@ if __name__ == "__main__":
     for index in range(0, len(expressions), 2):
         print(f"You got: {evaluate(expressions[index])}, ",
               f"expected answer: {expressions[index + 1]}")
+    while True:
+        expressions = input(": ")
+        print(f"You got: {evaluate(expressions)}")
