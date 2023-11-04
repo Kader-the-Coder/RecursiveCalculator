@@ -5,23 +5,23 @@ being a character in the string. The list will contain no empty values.
 
 
 #-----------------------------FUNCTIONS--------------------------------
-
+#pylint: disable=used-before-assignment
 
 def __convert_to_list(expression):
-    """Resolve symbols (-- and ++ )"""
-    old_symbol = [" ", "[", "]", "(", ")", "*", "/", "+", "-", ",", "  "]
+    """Convert string to list"""
+    current_symbol = [" ", "[", "]", "(", ")", "*", "/", "+", "-", ",", "  "]
     new_symbol = ["", "(", ")", " ( ", " ) ", " * ", " / ", " + ", " - ", ".", " "]
-    for i, symbol in enumerate(old_symbol):
+    for i, symbol in enumerate(current_symbol):
         expression = expression.replace(symbol, new_symbol[i])
     expression = expression.strip().split()
-    return list_without_empty_spaces(expression)    #pylint: disable=used-before-assignment
+    return list_without_empty_spaces(expression)
 
 
 def __resolve_symbols(expression):
-    """Resolve symbols (-- and ++ )"""
-    is_sum = False  # check if values must be joined with a "+"
+    """Resolve symbols double positive and negative symbols """
+    is_sum = False  # True if there must be a '+' between symbols.
     for i, symbol in enumerate(expression):
-        # Check if symbols must be separated by a "+" operator.
+        # Determine if symbols must be separated by a "+" operator.
         if symbol[-1].isnumeric() or symbol == ")":
             is_sum = not is_sum
         if symbol in ["(", "*", "/"]:
@@ -37,7 +37,7 @@ def __resolve_symbols(expression):
             elif expression[i + 1] in ["-", "+"]:
                 expression[i + 1] = "+" if expression[i + 1] == symbol else "-"
                 expression[i] = ""
-    return list_without_empty_spaces(expression)     #pylint: disable=used-before-assignment
+    return list_without_empty_spaces(expression)
 
 
 def __resolve_parenthesis(expression):
