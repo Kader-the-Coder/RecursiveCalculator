@@ -1,3 +1,9 @@
+"""
+Determine the order in which to simplify a given expression and
+then ranks them with greater values having a higher priority
+"""
+
+
 def prioritize(expression:list) -> list:
     """Return a numerical list of priorities.
 
@@ -29,6 +35,7 @@ def prioritize(expression:list) -> list:
             if expression[i] == ")" and parenthesis_open == parenthesis_close:
                 return priority
     return priority
+
 
 #-----------------------------UNIT TEST--------------------------------
 
