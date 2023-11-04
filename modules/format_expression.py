@@ -3,20 +3,22 @@ Converts a supplied string to a list, with each value of the list
 being a character in the string. The list will contain no empty values.
 """
 
+
+#-----------------------------FUNCTIONS--------------------------------
+
+
 def __convert_to_list(expression):
     """Resolve symbols (-- and ++ )"""
     old_symbol = [" ", "[", "]", "(", ")", "*", "/", "+", "-", ",", "  "]
     new_symbol = ["", "(", ")", " ( ", " ) ", " * ", " / ", " + ", " - ", ".", " "]
     for i, symbol in enumerate(old_symbol):
         expression = expression.replace(symbol, new_symbol[i])
-    expression = expression.strip()
-    expression = expression.split()
-    return [symbol for symbol in expression if symbol]
+    expression = expression.strip().split()
+    return list_without_empty_spaces(expression)    #pylint: disable=used-before-assignment
 
 
 def __resolve_symbols(expression):
     """Resolve symbols (-- and ++ )"""
-    # Resolve symbols (-- and ++ )
     is_sum = False  # check if values must be joined with a "+"
     for i, symbol in enumerate(expression):
         # Check if symbols must be separated by a "+" operator.
@@ -35,7 +37,7 @@ def __resolve_symbols(expression):
             elif expression[i + 1] in ["-", "+"]:
                 expression[i + 1] = "+" if expression[i + 1] == symbol else "-"
                 expression[i] = ""
-    return [symbol for symbol in expression if symbol]
+    return list_without_empty_spaces(expression)     #pylint: disable=used-before-assignment
 
 
 def __resolve_parenthesis(expression):
@@ -63,6 +65,7 @@ def format_expression(expression:str) -> list:
 #-----------------------------UNIT TEST--------------------------------
 
 if __name__ == "__main__":
+    from utility import list_without_empty_spaces
     expressions = [
         "1", ['1'],
         "2(3)", ['2', '*', '(', '3', ')'],
@@ -74,8 +77,8 @@ if __name__ == "__main__":
         "0.5 - 3.2 * 2.7 - 5", ['0.5', '+', '-3.2', '*', '2.7', '+', '-5'],
         "24 - ((32 * 5 / 4 + 1) - 7) - 5", ['24', '-', '(', '(', '32', '*', '5', '/', '4', '+', '+1', ')', '+', '-7', ')', '+', '-5'],  #pylint: disable=line-too-long
         "2-(-1-3)*(-5)", ['2', '-', '(', '-1', '+', '-3', ')', '*', '(', '-5', ')'],
-        "2 - (-3 + 2 - 5 + (-2 * 3) + 7) / 2", ['2', '-', '(', '-3', '+', '+2', '-5', '+', '(', '-2', '*', '3', ')', '+7', ')', '/', '2'],  #pylint: disable=line-too-long
-        "[-3 + (2 - 7) / 2] - 3", ['(', '-3', '+', '(', '2', '+', '-7', ')', '/', '2', ')', '+', '-3'],
+        "2 - (-3 + 2 - 5 + (-2 * 3) + 7) / 2", ['2', '-', '(', '-3', '+', '+2', '-5', '+', '(', '-2', '*', '3', ')', '+', '+7', ')', '/', '2'],  #pylint: disable=line-too-long
+        "[-3 + (2 - 7) / 2] - 3", ['(', '-3', '+', '(', '2', '+', '-7', ')', '/', '2', ')', '+', '-3'],     #pylint: disable=line-too-long
         "2(3 + 1)", ['2', '*', '(', '3', '+', '+1', ')'],
         "[3 + 3(1 + 2)]", ['(', '3', '+', '+3', '*', '(', '1', '+', '+2', ')', ')'],
         "3(2+1)", ['3', '*', '(', '2', '+', '+1', ')'],

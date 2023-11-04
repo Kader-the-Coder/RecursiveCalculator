@@ -1,15 +1,11 @@
 """A recursive algorithm to evaluate any algebraic expression."""
 
 #---------------------------IMPORT MODULES-----------------------------
+from modules.utility import list_without_empty_spaces
 from modules.format_expression import format_expression
 from modules.prioritize import prioritize
 from modules.simplify import simplify
 #-----------------------------FUNCTIONS--------------------------------
-
-
-def clean_list(expression:list) -> list:
-    "Returns a list after removing all empty values"
-    return [symbol for symbol in expression if symbol]
 
 
 def evaluate(expression:str) -> str:
@@ -48,8 +44,8 @@ def evaluate(expression:str) -> str:
     if expression[temp_index - 2] == "(" and expression[temp_index + 2] == ")":
         expression[temp_index - 2], expression[temp_index + 2] = ["", ""]
         priority[temp_index - 2], priority[temp_index + 2] = ["", ""]
-        expression = clean_list(expression)
-        priority = clean_list(priority)
+        expression = list_without_empty_spaces(expression)
+        priority = list_without_empty_spaces(priority)
     # Get new index of value with highest priority.
     temp_index = priority.index(max(priority))
 
@@ -60,7 +56,7 @@ def evaluate(expression:str) -> str:
     # Replace values that were simplified with the result.
     expression[temp_index - 1], expression[temp_index + 1] = ["", ""]
     expression[temp_index] = temp_value
-    expression = clean_list(expression)
+    expression = list_without_empty_spaces(expression)
 
     return evaluate("".join(str(symbol) for symbol in expression))
 
@@ -80,7 +76,10 @@ if __name__ == "__main__":
         "24 - ((32 * 5 / 4 + 1) - 7) - 5", "-15",
         "2-(-1-3)*(-5)", "-18",
         "2 - (-3 + 2 - 5 + (-2 * 3) + 7) / 2", "4.5",
-        "-3(4)", "-12"
+        "-3(4) - 1", "-13",
+        "3.4 - 2.7", "0.7",
+        "3.4", "3.4",
+        "2.7", "2.7"
         ]
     for index in range(0, len(expressions), 2):
         print(f"You got: {evaluate(expressions[index])}, ",
