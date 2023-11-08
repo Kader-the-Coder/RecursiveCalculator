@@ -1,12 +1,12 @@
 """Simplifies an expression with a single operator."""
 
-def simplify(expression:list) -> str:
+def simplify(expression:tuple) -> str:
     """Returns the value of a simple expression
 
-    * expression: A list with format [value1, operator, value2].
+    * expression: A tuple with format ("value1", "operator", "value2").
     """
-    if expression[1][-1].isnumeric(): # ["(", "value", ")"]
-        expression = str(expression[1])
+    if expression[1][-1].isnumeric(): # ("(", "value", ")")
+        expression = str(float(expression[1]))
     elif expression[1] == "*":
         expression = float(expression[0]) * float(expression[2])
     elif expression[1] == "/":

@@ -2,10 +2,10 @@
 Converts a supplied string to a list, with each value of the list
 being a character in the string. The list will contain no empty values.
 """
-
+from modules.utility import list_without_empty_spaces
 
 #-----------------------------FUNCTIONS--------------------------------
-#pylint: disable=used-before-assignment
+
 
 def __convert_to_list(expression):
     """Convert string to list"""
@@ -60,40 +60,3 @@ def format_expression(expression:str) -> list:
     expression = __resolve_parenthesis(expression)
     # Remove all empty values and then return list.
     return expression
-
-
-#-----------------------------UNIT TEST--------------------------------
-
-if __name__ == "__main__":
-    from utility import list_without_empty_spaces
-    expressions = [
-        "1", ['1'],
-        "2(3)", ['2', '*', '(', '3', ')'],
-        "(-1)", ['(', '-1', ')'],
-        "--(-1)", ['+', '(', '-1', ')'],
-        "2 + (8 - 4) + 3", ['2', '+', '(', '8', '+', '-4', ')', '+', '+3'],
-        "3 + 12 * 3 / 12 + 7", ['3', '+', '+12', '*', '3', '/', '12', '+', '+7'],
-        "(3 + 3) * 42 / (6 + 12)", ['(', '3', '+', '+3', ')', '*', '42', '/', '(', '6', '+', '+12', ')'],   #pylint: disable=line-too-long
-        "0.5 - 3.2 * 2.7 - 5", ['0.5', '+', '-3.2', '*', '2.7', '+', '-5'],
-        "24 - ((32 * 5 / 4 + 1) - 7) - 5", ['24', '-', '(', '(', '32', '*', '5', '/', '4', '+', '+1', ')', '+', '-7', ')', '+', '-5'],  #pylint: disable=line-too-long
-        "2-(-1-3)*(-5)", ['2', '-', '(', '-1', '+', '-3', ')', '*', '(', '-5', ')'],
-        "2 - (-3 + 2 - 5 + (-2 * 3) + 7) / 2", ['2', '-', '(', '-3', '+', '+2', '-5', '+', '(', '-2', '*', '3', ')', '+', '+7', ')', '/', '2'],  #pylint: disable=line-too-long
-        "[-3 + (2 - 7) / 2] - 3", ['(', '-3', '+', '(', '2', '+', '-7', ')', '/', '2', ')', '+', '-3'],     #pylint: disable=line-too-long
-        "2(3 + 1)", ['2', '*', '(', '3', '+', '+1', ')'],
-        "[3 + 3(1 + 2)]", ['(', '3', '+', '+3', '*', '(', '1', '+', '+2', ')', ')'],
-        "3(2+1)", ['3', '*', '(', '2', '+', '+1', ')'],
-        "3(2+(1+3))", ['3', '*', '(', '2', '+', '(', '1', '+', '+3', ')', ')'],
-        "3(-2(-1)))", ['3', '*', '(', '-2', '*', '(', '-1', ')', ')', ')'],
-        "3(2) + 1", ['3', '*', '(', '2', ')', '+', '+1']
-        ]
-    for index in range(0, len(expressions), 2):
-        print(f"{expressions[index]} <- Input")
-        print(f"{format_expression(expressions[index])} <- Output\n",
-              f"{expressions[index + 1]} <- Expected output", sep="")
-        if format_expression(expressions[index]) == expressions[index + 1]:
-            print("passed\n")
-        else:
-            print("failed\n")
-    while True:
-        expressions = input(": ")
-        print(f"You got: {format_expression(expressions)}")

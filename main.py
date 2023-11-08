@@ -50,7 +50,7 @@ def evaluate(expression:str) -> str:
     temp_index = priority.index(max(priority))
 
     # Apply operation with highest priority on operands.
-    temp_expression = expression[temp_index - 1:temp_index + 2]
+    temp_expression =   tuple(expression[temp_index - 1:temp_index + 2])
     temp_value = simplify(temp_expression)
 
     # Replace values that were simplified with the result.
@@ -64,26 +64,6 @@ def evaluate(expression:str) -> str:
 #-----------------------------UNIT TEST--------------------------------
 
 if __name__ == "__main__":
-    expressions = [
-        "1", "1",
-        "(1)", "1",
-        "(-1)", "-1",
-        "--(-1)", "1",
-        "2 + (8 - 4) + 3", "9",
-        "3 + 12 * 3 / 12 + 7", "13",
-        "(3 + 3) * 42 / (6 + 12)", "14",
-        "0.5 - 3.2 * 2.7 - 5", "-13.14",
-        "24 - ((32 * 5 / 4 + 1) - 7) - 5", "-15",
-        "2-(-1-3)*(-5)", "-18",
-        "2 - (-3 + 2 - 5 + (-2 * 3) + 7) / 2", "4.5",
-        "-3(4) - 1", "-13",
-        "3.4 - 2.7", "0.7",
-        "3.4", "3.4",
-        "2.7", "2.7"
-        ]
-    for index in range(0, len(expressions), 2):
-        print(f"You got: {evaluate(expressions[index])}, ",
-              f"expected answer: {expressions[index + 1]}")
     while True:
         expressions = input(": ")
         print(f"You got: {evaluate(expressions)}")
