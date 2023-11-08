@@ -19,11 +19,10 @@ test_num = 0
 functions = [format_expression, prioritize, simplify, evaluate]
 
 #======================================================================
-expressions = []
-# input : expected output
+expressions = []     # Format for each value in list: {input : expected output}
 expressions.append({ # format_expression
-    "3(2) + 1 * 4" : ['3', '*', '(', '2', ')', '+', '1', '*', '4'],
-    "-2 + 3(3 - 1) + 2" : ['-2', '+', '3', '*', '(', '3', '+', '-1', ')', '+', '+2'],
+    "3(2) + 1 * 4" : ['+3', '*', '(', '+2', ')', '+', '+1', '*', '+4'],
+    "-2 + 3(3 - 1) + 2" : ['-2', '+', '+3', '*', '(', '+3', '+', '-1', ')', '+', '+2'],
     })
 expressions.append({ # prioritize
     "3(2) + 1 * 4" : [1, 3, 4, 3, 1, 2, 1, 1, 1, 3, 1, 1],
@@ -44,35 +43,47 @@ expressions.append({ # evaluate
     "-3+-3(3 - 1)*3 + (2+1)/7": "-20.57142857"
     })
 #======================================================================
-index = int(input('''
+while True:
+    os.system('cls')
+    index = input('''UNITTEST
 0 - format_expression
 1 - prioritize
 2 - simplify
 3 - evaluate (main)
-: '''))
-print("-"*72)
-func = functions[index]
-for expression, expected in expressions[index].items():
-    time_start = timeit.default_timer()
-    result = func(expression)
-    runtime = timeit.default_timer() - time_start
-    test_num += 1
-    if result != expected:
-        print("-"*72)
-        print(f">> Test {test_num} Failed",
-              f"expression: {expression}",
-              f"returned: {result}",
-              f"expected: {expected}",
-              f"runtime: {runtime}",
-            sep="\n")
-        print("-"*72)
-        failed += 1
-    else:
-        print(f">> Test {test_num} Passed:",
-              f"{expression} = {result}",
-              f"(completed in {runtime} seconds)",)
-        passed +=1
+e - exit
+: ''')
+    os.system('cls')
+    if index == 'e':
+        break
+    if not index.isnumeric():
+        input("Not valid option")
+        continue
+    if int(index) >= len(expressions):
+        input("Not valid option")
+        continue
+    index = int(index)
+    func = functions[index]
+    for expression, expected in expressions[index].items():
+        time_start = timeit.default_timer()
+        result = func(expression)
+        runtime = timeit.default_timer() - time_start
+        test_num += 1
+        if result != expected:
+            print("-"*72)
+            print(f">> Test {test_num} Failed.",
+                f"expression: {expression}",
+                f"returned: {result}",
+                f"expected: {expected}",
+                f"runtime: {runtime}",
+                sep="\n")
+            print("-"*72)
+            failed += 1
+        else:
+            print(f">> Test {test_num} Passed.",
+                f"Completed in {runtime} seconds.",)
+            passed +=1
 
-print("-"*72)
-print(f"{passed} tests passed.")
-print(f"{failed} tests failed.")
+    print("-"*72)
+    print(f"{passed} tests passed.")
+    print(f"{failed} tests failed.")
+    input("Press ENTER to return to main menu.")

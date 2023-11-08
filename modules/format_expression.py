@@ -37,6 +37,10 @@ def __resolve_symbols(expression):
             elif expression[i + 1] in ["-", "+"]:
                 expression[i + 1] = "+" if expression[i + 1] == symbol else "-"
                 expression[i] = ""
+    for i, symbol in enumerate(expression):
+        if symbol.isnumeric():
+            expression[i] = f"+{expression[i]}"
+  
     return list_without_empty_spaces(expression)
 
 
