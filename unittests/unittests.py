@@ -6,7 +6,6 @@ import os
 import sys
 import timeit
 import traceback
-import logging
 DIR = os.path.dirname(__file__)
 sys.path.insert(0, DIR.replace("unittests", ""))
 from modules.format_expression import format_expression
@@ -23,6 +22,7 @@ expressions = []     # Format for each value in list: {input : expected output}
 expressions.append({ # format_expression
     "3(2) + 1 * 4" : ['+3', '*', '(', '+2', ')', '+', '+1', '*', '+4'],
     "-2 + 3(3 - 1) + 2" : ['-2', '+', '+3', '*', '(', '+3', '+', '-1', ')', '+', '+2'],
+    "-3 + -3(3 - 1) * 3 + (2 + 1) / 7" : ['-3', '+', '-3', '*', '(', '+3', '+', '-1', ')', '*', '+3', '+', '(', '+2', '+', '+1', ')', '/', '+7']
     })
 expressions.append({ # prioritize
     "3(2) + 1 * 4" : [1, 3, 4, 3, 1, 2, 1, 1, 1, 3, 1, 1],
