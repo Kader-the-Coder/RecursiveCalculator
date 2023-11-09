@@ -2,10 +2,17 @@
 #pylint: disable=import-error
 #pylint: disable=wrong-import-position
 #pylint: disable=invalid-name
+
+#===========================IMPORT LIBRARIES===========================
+
 import os
 import sys
+import json
 import timeit
 import traceback
+
+#============================IMPORT MODULES============================
+
 DIR = os.path.dirname(__file__)
 sys.path.insert(0, DIR.replace("unittests", ""))
 from modules.format_expression import format_expression
@@ -13,47 +20,28 @@ from modules.prioritize import prioritize
 from modules.simplify import simplify
 from main import evaluate
 
-# Test tallies
+#=========================INITIALIZE VARIABLES=========================
 
-functions = [format_expression, prioritize, simplify, evaluate]
+unittestsfile = f"{DIR}\\unittests.json"
+func = [format_expression, prioritize, simplify, evaluate]
+func_string = ["format_expression", "prioritize", "simplify", "evaluate"]
 
-#======================================================================
-expressions = []     # Format for each value in list: {input : expected output}
-expressions.append({ # format_expression
-    "3(2) + 1 * 4" : ['+3', '*', '(', '+2', ')', '+', '+1', '*', '+4'],
-    "-2 + 3(3 - 1) + 2" : ['-2', '+', '+3', '*', '(', '+3', '+', '-1', ')', '+', '+2'],
-    "-3 + -3(3 - 1) * 3 + (2 + 1) / 7" : ['-3', '+', '-3', '*', '(', '+3', '+', '-1', ')', '*', '+3', '+', '(', '+2', '+', '+1', ')', '/', '+7']
-    })
-expressions.append({ # prioritize
-    "3(2) + 1 * 4" : [1, 3, 4, 3, 1, 2, 1, 1, 1, 3, 1, 1],
-    "-2 + 3(3 - 1) + 2" : [2, 1, 1, 2, 1, 1, 3, 4, 4, 5, 4, 4, 3, 1, 2, 1, 1]
-    })
-expressions.append({ # simplify
-    ("-1", "*", "7"): str(float(-7)),
-    ("6", "/", "3"): str(float(2)),
-    ("3.4", "+", "2.7"): str(float(6.1)),
-    ("8", "-", "-4"): str(float(12)),
-    ("(", "-3", ")"): str(float(-3)),
-    ("(", "2.8", ")"): str(float(2.8)),
-    })
-expressions.append({ # evaluate
-    "1" : "1",
-    "3(2) + 1 * 4" : "10",
-    "-2 + 3(3 - 1) + 2" : "6",
-    "-3+-3(3 - 1)*3 + (2+1)/7": "-20.57142857",
-    "3+-3": "0",
-    "(1": "1"
-    })
-#======================================================================
+#===========================DEFINE FUNCTIONS===========================
 
 
-def run_test(function):
+def run_test(function, index, expressions):
     """Runs a given function"""
     os.system('cls')
     failed, passed, test_num = 0, 0, 0
-    for expression, expected in expressions[index].items():
+    print(f"running {function.__name__}", "-" * 72, sep="\n")
+    for expression, expected in expressions.items():
         time_start = timeit.default_timer()
         try:
+            if index == 1:  # prioritize
+                expression = expression.split(" ")
+            if index == 2:  # simplify
+                expression = expression.replace(" ","").split(",")
+                expected = str(float(expected))
             result = function(expression)
         except BaseException:   #pylint: disable=broad-exception-caught
             result = traceback.format_exc()
@@ -79,9 +67,10 @@ def run_test(function):
     print(f"{failed} tests failed.")
 
 
-while True:
-    os.system('cls')
+def menu():
+    """Main function for selecting test to perform"""
     index = input('''UNITTEST
+-----------------------------------------------------------------------
 0 - format_expression
 1 - prioritize
 2 - simplify
@@ -91,15 +80,26 @@ e - exit
 
     if index == 'e':
         os.system('cls')
-        break
+        return False
     if not index.isnumeric():
-        input("Not valid option")
-        continue
-    if int(index) >= len(expressions):
-        input("Not valid option")
-        continue
+        print("Not valid option")
+        return True
+    if int(index) >= len(func):
+        print("Not valid option")
+        return True
 
+    with open(unittestsfile, "r", encoding="utf-8") as file:
+        data = json.load(file)
     index = int(index)
-    func = functions[index]
-    run_test(func)
-    input("Press ENTER to return to main menu.")
+    function = func[index]
+    expressions = data[func_string[index]]
+    run_test(function, index, expressions)
+
+    return True
+
+#===============================RUN MODULE=============================
+
+os.system('cls')
+while menu():
+    input("\nPress ENTER to return to main menu.")
+    os.system('cls')

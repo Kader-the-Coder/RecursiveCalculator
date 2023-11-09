@@ -4,7 +4,7 @@ then ranks them with greater values having a higher priority
 """
 
 
-def prioritize(expression:list) -> list:
+def prioritize(expression:list|str) -> list:
     """Return a numerical list of priorities.
 
     Determine the order in which to simplify a given expression and
