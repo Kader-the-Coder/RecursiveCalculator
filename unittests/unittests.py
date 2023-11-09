@@ -5,6 +5,8 @@
 import os
 import sys
 import timeit
+import traceback
+import logging
 DIR = os.path.dirname(__file__)
 sys.path.insert(0, DIR.replace("unittests", ""))
 from modules.format_expression import format_expression
@@ -13,9 +15,7 @@ from modules.simplify import simplify
 from main import evaluate
 
 # Test tallies
-failed = 0
-passed = 0
-test_num = 0
+
 functions = [format_expression, prioritize, simplify, evaluate]
 
 #======================================================================
@@ -40,32 +40,23 @@ expressions.append({ # evaluate
     "1" : "1",
     "3(2) + 1 * 4" : "10",
     "-2 + 3(3 - 1) + 2" : "6",
-    "-3+-3(3 - 1)*3 + (2+1)/7": "-20.57142857"
+    "-3+-3(3 - 1)*3 + (2+1)/7": "-20.57142857",
+    "3+-3": "0",
+    "(1": "1"
     })
 #======================================================================
-while True:
+
+
+def run_test(function):
+    """Runs a given function"""
     os.system('cls')
-    index = input('''UNITTEST
-0 - format_expression
-1 - prioritize
-2 - simplify
-3 - evaluate (main)
-e - exit
-: ''')
-    os.system('cls')
-    if index == 'e':
-        break
-    if not index.isnumeric():
-        input("Not valid option")
-        continue
-    if int(index) >= len(expressions):
-        input("Not valid option")
-        continue
-    index = int(index)
-    func = functions[index]
+    failed, passed, test_num = 0, 0, 0
     for expression, expected in expressions[index].items():
         time_start = timeit.default_timer()
-        result = func(expression)
+        try:
+            result = function(expression)
+        except BaseException:   #pylint: disable=broad-exception-caught
+            result = traceback.format_exc()
         runtime = timeit.default_timer() - time_start
         test_num += 1
         if result != expected:
@@ -74,7 +65,7 @@ e - exit
                 f"expression: {expression}",
                 f"returned: {result}",
                 f"expected: {expected}",
-                f"runtime: {runtime}",
+                f"Completed in {runtime}",
                 sep="\n")
             print("-"*72)
             failed += 1
@@ -86,4 +77,29 @@ e - exit
     print("-"*72)
     print(f"{passed} tests passed.")
     print(f"{failed} tests failed.")
+
+
+while True:
+    os.system('cls')
+    index = input('''UNITTEST
+0 - format_expression
+1 - prioritize
+2 - simplify
+3 - evaluate (main)
+e - exit
+: ''')
+
+    if index == 'e':
+        os.system('cls')
+        break
+    if not index.isnumeric():
+        input("Not valid option")
+        continue
+    if int(index) >= len(expressions):
+        input("Not valid option")
+        continue
+
+    index = int(index)
+    func = functions[index]
+    run_test(func)
     input("Press ENTER to return to main menu.")

@@ -40,7 +40,7 @@ def __resolve_symbols(expression):
     for i, symbol in enumerate(expression):
         if symbol.isnumeric():
             expression[i] = f"+{expression[i]}"
-  
+
     return list_without_empty_spaces(expression)
 
 
