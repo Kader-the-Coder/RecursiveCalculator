@@ -35,3 +35,10 @@ def prioritize(expression:list|str) -> list:
             if expression[i] == ")" and parenthesis_open == parenthesis_close:
                 return priority
     return priority
+
+#-----------------------------UNIT TEST--------------------------------
+
+if __name__ == "__main__":
+    expressions = ['-3', '+', '-18', '+3', '/', '+7']
+    #expressions = input(": ")
+    print(f"You got: {prioritize(expressions)}")

@@ -2,7 +2,6 @@
 Converts a supplied string to a list, with each value of the list
 being a character in the string. The list will contain no empty values.
 """
-from modules.utility import list_without_empty_spaces
 
 #-----------------------------FUNCTIONS--------------------------------
 
@@ -14,7 +13,7 @@ def __convert_to_list(expression):
     for i, symbol in enumerate(current_symbol):
         expression = expression.replace(symbol, new_symbol[i])
     expression = expression.strip().split()
-    return list_without_empty_spaces(expression)
+    return [symbol for symbol in expression if symbol]
 
 
 def __resolve_symbols(expression):
@@ -22,9 +21,11 @@ def __resolve_symbols(expression):
     is_sum = False  # True if there must be a '+' between symbols.
     for i, symbol in enumerate(expression):
         # Determine if symbols must be separated by a "+" operator.
-        if symbol[-1].isnumeric() or symbol == ")":
-            is_sum = not is_sum
+        if not symbol[-1].isnumeric() or symbol != ")":
+            is_sum = True
         if symbol in ["(", "*", "/"]:
+            is_sum = False
+        if expression[i - 1] == "(":
             is_sum = False
         if symbol in ["+", "-"] and expression[i - 1] == ")":
             is_sum = True
@@ -33,15 +34,22 @@ def __resolve_symbols(expression):
         if symbol in ["-", "+"]:
             if expression[i + 1][-1].isnumeric():
                 expression[i + 1] = "".join([symbol, expression[i + 1]])
-                expression[i] = "+" if is_sum else ""
+                if is_sum and i != 0:
+                    expression[i] = "+"
+                if expression[i - 1] in ["*", "/"] and i != 0:
+                    expression[i] = ""
+                    continue
+                elif is_sum:
+                    expression[i] = "+" if i != 0 else ""
+                    continue
+                expression[i] = ""
             elif expression[i + 1] in ["-", "+"]:
                 expression[i + 1] = "+" if expression[i + 1] == symbol else "-"
                 expression[i] = ""
     for i, symbol in enumerate(expression):
         if symbol.isnumeric():
             expression[i] = f"+{expression[i]}"
-
-    return list_without_empty_spaces(expression)
+    return [symbol for symbol in expression if symbol]
 
 
 def __resolve_parenthesis(expression):
@@ -64,3 +72,12 @@ def format_expression(expression:str) -> list:
     expression = __resolve_parenthesis(expression)
     # Remove all empty values and then return list.
     return expression
+
+
+#-----------------------------UNIT TEST--------------------------------
+
+if __name__ == "__main__":
+    while True:
+        expressions = input(": ")
+        print(f"Input: {expressions}")
+        print(f"Output: {format_expression(expressions)}\n")

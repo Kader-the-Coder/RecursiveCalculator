@@ -25,7 +25,6 @@ def evaluate(expression:str) -> str:
     """
     # Format expression for interpretation.
     expression = format_expression(expression)
-
     # Base case.
     if len(expression) == 1:
         # If value is an integer:
@@ -52,12 +51,10 @@ def evaluate(expression:str) -> str:
     # Apply operation with highest priority on operands.
     temp_expression =   tuple(expression[temp_index - 1:temp_index + 2])
     temp_value = simplify(temp_expression)
-
     # Replace values that were simplified with the result.
     expression[temp_index - 1], expression[temp_index + 1] = ["", ""]
     expression[temp_index] = temp_value
     expression = list_without_empty_spaces(expression)
-
     return evaluate("".join(str(symbol) for symbol in expression))
 
 
@@ -66,4 +63,5 @@ def evaluate(expression:str) -> str:
 if __name__ == "__main__":
     while True:
         expressions = input(": ")
-        print(f"You got: {evaluate(expressions)}")
+        print(f"Input: {expressions}")
+        print(f"Output: {evaluate(expressions)}\n")

@@ -51,8 +51,8 @@ def run_test(function, index, expressions):
             print("-"*72)
             print(f">> Test {test_num} Failed.",
                 f"expression: {expression}",
-                f"returned: {result}",
-                f"expected: {expected}",
+                f"returned: {result}{type(result)}",
+                f"expected: {expected}{type(expected)}",
                 f"Completed in {runtime}",
                 sep="\n")
             print("-"*72)
