@@ -52,16 +52,28 @@ def __resolve_symbols(expression):
     return [symbol for symbol in expression if symbol]
 
 
-def __resolve_parenthesis(expression):
+def __resolve_parenthesis(expression:list):
     """Insert '*' between values and '('."""
     index_of_bracket = []
+    if "(" not in expression:
+        return expression
+    
+    # Keep track of nested parentheses.
+    parenthesis_open = 0
+    parenthesis_close = 0
     for i, symbol in enumerate(expression):
+        parenthesis_open += 1 if symbol == "(" else 0
+        parenthesis_close += 1 if symbol == ")" else 0
         if symbol == "(" and i != 0:
             # [-1] to look only at last value
             if expression[i - 1][-1].isnumeric():
                 index_of_bracket.append(i + len(index_of_bracket))
     for i in index_of_bracket:
         expression.insert(i,"*")
+    parenthesis_number = parenthesis_open - parenthesis_close
+    for i in range(abs(parenthesis_number)):
+        if parenthesis_number > 0:
+            expression.append(")")
     return expression
 
 
